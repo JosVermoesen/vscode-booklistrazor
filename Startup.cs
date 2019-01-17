@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using vscode_booklistrazor.Data;
 
 namespace vscode_booklistrazor
 {
@@ -31,7 +35,10 @@ namespace vscode_booklistrazor
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // dotnet ef migrations add AddBookToDatabase
+            // dotnet ef database update
 
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

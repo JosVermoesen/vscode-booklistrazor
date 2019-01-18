@@ -20,9 +20,25 @@ namespace vscode_booklistrazor.Pages.BookList
         }
         public IEnumerable<Book> Books { get; set; }
 
+        [TempData]
+        public string Message { get; set; }
+
         public async Task OnGet()
         {
             Books = await _db.Books.ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostDelete(int id)
+        {
+            var book = await _db.Books.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            _db.Books.Remove(book);
+            await _db.SaveChangesAsync();
+            Message = "Book deleted successfully";
+            return RedirectToPage("Index");
         }
     }
 }
